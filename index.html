@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>משחק לימוד צבעים באנגלית לכיתה ב' 3 האלופים</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            direction: rtl;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .color-square {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+        }
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .color-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 5px;
+            cursor: pointer;
+            min-width: 100px;
+        }
+        #feedback {
+            margin: 20px 0;
+            font-size: 24px;
+        }
+        #emoji {
+            font-size: 50px;
+        }
+        #instructions {
+            background-color: #fffde7;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>משחק לימוד צבעים באנגלית לכיתה ב' 3 האלופים</h1>
+        
+        <div id="instructions">
+            <h3>הוראות המשחק:</h3>
+            <p>
+                1. הריבוע יופיע בצבע מסוים
+                2. עליך לבחור את שם הצבע באנגלית המתאים לריבוע
+                3. אם תענה נכון - תקבל חיוך 😄
+                4. אם תענה לא נכון - תקבל עצב 😢
+                5. בהצלחה!
+            </p>
+        </div>
+
+        <div id="color-square" class="color-square"></div>
+        
+        <div id="color-options" class="color-options"></div>
+        
+        <div id="feedback">
+            <div id="emoji"></div>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        const colors = [
+            {name: 'Red', color: '#FF0000'},
+            {name: 'Blue', color: '#0000FF'},
+            {name: 'Green', color: '#00FF00'},
+            {name: 'Yellow', color: '#FFFF00'},
+            {name: 'Purple', color: '#800080'},
+            {name: 'Orange', color: '#FFA500'}
+        ];
+
+        let currentColor;
+
+        function setupGame() {
+            const colorSquare = document.getElementById('color-square');
+            const colorOptions = document.getElementById('color-options');
+            const emoji = document.getElementById('emoji');
+            const message = document.getElementById('message');
+
+            // Select random color
+            currentColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Set square color
+            colorSquare.style.backgroundColor = currentColor.color;
+
+            // Shuffle colors for options
+            const shuffledColors = [...colors].sort(() => 0.5 - Math.random());
+
+            // Clear previous options
+            colorOptions.innerHTML = '';
+
+            // Create color buttons in two rows
+            const firstRowColors = shuffledColors.slice(0, 3);
+            const secondRowColors = shuffledColors.slice(3);
+
+            // Create first row of buttons
+            const firstRowDiv = document.createElement('div');
+            firstRowDiv.style.display = 'flex';
+            firstRowDiv.style.justifyContent = 'center';
+            firstRowDiv.style.gap = '10px';
+            firstRowColors.forEach(color => {
+                const button = document.createElement('button');
+                button.textContent = color.name;
+                button.className = 'color-btn';
+                button.onclick = () => checkAnswer(color.name);
+                firstRowDiv.appendChild(button);
+            });
+            colorOptions.appendChild(firstRowDiv);
+
+            // Create second row of buttons
+            const secondRowDiv = document.createElement('div');
+            secondRowDiv.style.display = 'flex';
+            secondRowDiv.style.justifyContent = 'center';
+            secondRowDiv.style.gap = '10px';
+            secondRowDiv.style.marginTop = '10px';
+            secondRowColors.forEach(color => {
+                const button = document.createElement('button');
+                button.textContent = color.name;
+                button.className = 'color-btn';
+                button.onclick = () => checkAnswer(color.name);
+                secondRowDiv.appendChild(button);
+            });
+            colorOptions.appendChild(secondRowDiv);
+
+            // Reset feedback
+            emoji.textContent = '';
+            message.textContent = '';
+        }
+
+        function checkAnswer(selectedColor) {
+            const emoji = document.getElementById('emoji');
+            const message = document.getElementById('message');
+
+            if (selectedColor === currentColor.name) {
+                emoji.textContent = '😄';
+                message.textContent = 'כל הכבוד! תשובה נכונה!';
+                setTimeout(setupGame, 1500);
+            } else {
+                emoji.textContent = '😢';
+                message.textContent = 'אופס! זו לא התשובה הנכונה';
+                setTimeout(setupGame, 1500);
+            }
+        }
+
+        // Start the game
+        setupGame();
+    </script>
+</body>
+</html>
